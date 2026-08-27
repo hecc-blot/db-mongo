@@ -3,8 +3,9 @@ module github.com/hecc-blot/db-mongo
 go 1.26.1
 
 require (
-	github.com/hecc-blot/db v0.1.3
-	github.com/hecc-blot/framework v0.1.2
+	github.com/hecc-blot/core v0.1.4
+	github.com/hecc-blot/db v0.1.4
+	github.com/hecc-blot/framework v0.1.4
 	github.com/stretchr/testify v1.12.1
 	go.mongodb.org/mongo-driver/v2 v2.8.1
 	go.opentelemetry.io/contrib/instrumentation/go.mongodb.org/mongo-driver/v2/mongo/otelmongo v0.0.0-20260826095902-c4c6248ec228

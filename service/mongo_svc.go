@@ -8,7 +8,7 @@ import (
 
 	dbMongoConf "github.com/hecc-blot/db-mongo/config"
 	dbMongoContract "github.com/hecc-blot/db-mongo/contract"
-	"github.com/hecc-blot/framework/contract/log"
+	"github.com/hecc-blot/core/contract/log"
 	"github.com/hecc-blot/framework/util"
 
 	"go.mongodb.org/mongo-driver/v2/mongo"
