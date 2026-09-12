@@ -9,7 +9,6 @@ import (
 	"github.com/hecc-blot/core/contract/log"
 	dbMongoConf "github.com/hecc-blot/db-mongo/config"
 	dbMongoContract "github.com/hecc-blot/db-mongo/contract"
-	"github.com/hecc-blot/framework/util"
 
 	"go.mongodb.org/mongo-driver/v2/mongo"
 	"go.mongodb.org/mongo-driver/v2/mongo/options"
@@ -105,7 +104,6 @@ func buildUri(config *dbMongoConf.MongoConfig) string {
 
 // WithContext 设置上下文 — 返回副本，不修改原实例，保证并发安全
 func (m *MongoSvc) WithContext(ctx context.Context) dbMongoContract.IDbDocument {
-	ctx = util.ExtractContext(ctx)
 	c := *m
 	c.ctx = ctx
 	return &c
