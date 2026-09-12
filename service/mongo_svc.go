@@ -39,23 +39,21 @@ var _ dbMongoContract.IDbDocument = (*MongoSvc)(nil)
 
 // NewMongo 创建单个 MongoDB 实例，返回实例与清理函数
 func NewMongo(config *dbMongoConf.MongoConfig, logger log.ILog) (dbMongoContract.IDbDocument, func(), error) {
-	connectTimeout := time.Duration(config.ConnectTimeout) * time.Second
-	if connectTimeout <= 0 {
-		connectTimeout = 10 * time.Second
-	}
+	cfg := dbMongoConf.Normalize(*config)
+	connectTimeout := time.Duration(cfg.ConnectTimeout) * time.Second
 
-	opts := options.Client().ApplyURI(buildUri(config))
+	opts := options.Client().ApplyURI(buildUri(&cfg))
 	// 注册 OpenTelemetry 监控，命令执行自动生成 span
 	opts.SetMonitor(otelmongo.NewMonitor())
 	opts.SetTimeout(connectTimeout)
-	if config.MaxPoolSize > 0 {
-		opts.SetMaxPoolSize(config.MaxPoolSize)
+	if cfg.MaxPoolSize > 0 {
+		opts.SetMaxPoolSize(cfg.MaxPoolSize)
 	}
-	if config.MinPoolSize > 0 {
-		opts.SetMinPoolSize(config.MinPoolSize)
+	if cfg.MinPoolSize > 0 {
+		opts.SetMinPoolSize(cfg.MinPoolSize)
 	}
-	if config.MaxConnIdleTime > 0 {
-		opts.SetMaxConnIdleTime(time.Duration(config.MaxConnIdleTime) * time.Second)
+	if cfg.MaxConnIdleTime > 0 {
+		opts.SetMaxConnIdleTime(time.Duration(cfg.MaxConnIdleTime) * time.Second)
 	}
 
 	client, err := mongo.Connect(opts)
@@ -73,9 +71,9 @@ func NewMongo(config *dbMongoConf.MongoConfig, logger log.ILog) (dbMongoContract
 
 	return &MongoSvc{
 		client:        client,
-		database:      client.Database(config.Database),
+		database:      client.Database(cfg.Database),
 		logger:        logger,
-		slowThreshold: time.Duration(config.SlowThreshold) * time.Millisecond,
+		slowThreshold: time.Duration(cfg.SlowThreshold) * time.Millisecond,
 	}, func() {
 		ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 		defer cancel()

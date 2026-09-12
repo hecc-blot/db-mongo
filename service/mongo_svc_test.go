@@ -29,3 +29,21 @@ func TestBuildUri(t *testing.T) {
 		assert.Equal(t, "mongodb+srv://cluster.example.com/test?replicaSet=rs0", buildUri(cfg))
 	})
 }
+
+func TestMongoConfigNormalize(t *testing.T) {
+	t.Run("ConnectTimeout 未设置时回填默认 10s", func(t *testing.T) {
+		assert.Equal(t, dbMongoConf.DefaultConnectTimeout, dbMongoConf.Normalize(dbMongoConf.MongoConfig{}).ConnectTimeout)
+	})
+
+	t.Run("ConnectTimeout 显式设置时保持原值", func(t *testing.T) {
+		assert.Equal(t, 3, dbMongoConf.Normalize(dbMongoConf.MongoConfig{ConnectTimeout: 3}).ConnectTimeout)
+	})
+
+	t.Run("0 值语义为驱动默认/不限制/不记录的字段不被回填", func(t *testing.T) {
+		cfg := dbMongoConf.Normalize(dbMongoConf.MongoConfig{})
+		assert.Zero(t, cfg.MaxPoolSize)
+		assert.Zero(t, cfg.MinPoolSize)
+		assert.Zero(t, cfg.MaxConnIdleTime)
+		assert.Zero(t, cfg.SlowThreshold)
+	})
+}
