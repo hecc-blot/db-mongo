@@ -6,9 +6,9 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/hecc-blot/core/contract/log"
 	dbMongoConf "github.com/hecc-blot/db-mongo/config"
 	dbMongoContract "github.com/hecc-blot/db-mongo/contract"
-	"github.com/hecc-blot/core/contract/log"
 	"github.com/hecc-blot/framework/util"
 
 	"go.mongodb.org/mongo-driver/v2/mongo"
@@ -70,15 +70,15 @@ func NewMongo(config *dbMongoConf.MongoConfig, logger log.ILog) (dbMongoContract
 	}
 
 	return &MongoSvc{
-		client:        client,
-		database:      client.Database(cfg.Database),
-		logger:        logger,
-		slowThreshold: time.Duration(cfg.SlowThreshold) * time.Millisecond,
-	}, func() {
-		ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-		defer cancel()
-		_ = client.Disconnect(ctx)
-	}, nil
+			client:        client,
+			database:      client.Database(cfg.Database),
+			logger:        logger,
+			slowThreshold: time.Duration(cfg.SlowThreshold) * time.Millisecond,
+		}, func() {
+			ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+			defer cancel()
+			_ = client.Disconnect(ctx)
+		}, nil
 }
 
 // buildUri 组装 MongoDB 连接串；Uri 非空时直接返回
