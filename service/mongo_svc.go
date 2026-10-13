@@ -307,7 +307,7 @@ func (m *MongoSvc) buildFindOneOptions() *options.FindOneOptionsBuilder {
 
 func (m *MongoSvc) checkCollection() error {
 	if m.collection == nil {
-		return errors.New("mongo: 未指定集合，请先调用 Collection(name)")
+		return errors.New("mongo: collection is not specified, call Collection(name) first")
 	}
 	return nil
 }
